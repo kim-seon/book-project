@@ -1,49 +1,97 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useState } from 'react'
 import styles from '../styles/Home.module.css'
 import Link from 'next/link';
-import { useRouter } from 'next/router'
+import SearchContainer from './books/main/searchContainer';
 
+// async function ListMap(posts) {
+//     {posts.item.map((post, index) => {
+//         return (
+//             <div key={post.itemId}>
+//                 <Link
+//                     href={{
+//                         pathname: `/books/${post.title}/${post.itemId}`,
+//                         query: {
+//                             title: post.title,
+//                             cover: post.cover,
+//                             author: post.author,
+//                             publisher: post.publisher,
+//                             pubDate: post.pubDate,
+//                             description: post.description,
+//                             isbn13: post.isbn13,
+//                             categoryName: post.categoryName,
+//                             priceSales: post.priceSales
+//                         }
+//                     }}
+//                     as={`/books/${post.title}/${post.itemId}`}
+//                 >
+//                     <h4>{post.title}</h4>
+//                 </Link>
+//             </div>
+//         )
+//     })}
+// }
 
-const ttbKey = 'ttblte08091534001'
-
-export default function Home({posts}) {
-    const router = useRouter()
-    const [SelectList, setSelectList] = useState("")
-
-    const handleListChangeOption = (e) => {
-        setSelectList(e.target.value)
-        console.log(SelectList)
-    }
-
-    // const onClick = (id, title, cover, author, publisher, pubDate, description, isbn13, categoryName, priceSales) => {
-    //     router.push(
-    //         {
-    //             pathname: `/books/${title}/${id}`,
-    //             query: {
-    //                 title,
-    //                 cover,
-    //                 author,
-    //                 publisher,
-    //                 pubDate,
-    //                 description,
-    //                 isbn13,
-    //                 categoryName,
-    //                 priceSales
-    //             }
-    //         },
-    //         `/books/${title}/${id}`
-    //     )
-    // }
-
+export default function Home({newPosts, bestPosts, rcmPosts}) {
     return (
         <div>
-            <label><input type="radio" name="bookList" value="ItemNewSpecial" defaultChecked onChange={handleListChangeOption}/>신간 Top3</label>
-            <label><input type="radio" name="bookList" value="Bestseller" onChange={handleListChangeOption} />베스트셀러 Top3</label>
-            <label><input type="radio" name="bookList" value="BlogBest" onChange={handleListChangeOption} />블로거베스트 Top3</label>
-            {posts.item.map((post, index) => {
+            <Link href='/signup'>회원가입</Link>
+            <SearchContainer />
+            <h3>신간 Top5</h3>
+            {newPosts.item.map((post, index) => {
+                return (
+                    <div key={post.itemId}>
+                        <Link
+                            href={{
+                                pathname: `/books/${post.title}/${post.itemId}`,
+                                query: {
+                                    title: post.title,
+                                    cover: post.cover,
+                                    author: post.author,
+                                    publisher: post.publisher,
+                                    pubDate: post.pubDate,
+                                    description: post.description,
+                                    isbn13: post.isbn13,
+                                    categoryName: post.categoryName,
+                                    priceSales: post.priceSales
+                                }
+                            }}
+                            as={`/books/${post.title}/${post.itemId}`}
+                        >
+                            <h4>{post.title}</h4>
+                        </Link>
+                    </div>
+                )
+            })}
+            <h3>베스트셀러 Top5</h3>
+            {bestPosts.item.map((post, index) => {
+                return (
+                    <div key={post.itemId}>
+                        <Link
+                            href={{
+                                pathname: `/books/${post.title}/${post.itemId}`,
+                                query: {
+                                    title: post.title,
+                                    cover: post.cover,
+                                    author: post.author,
+                                    publisher: post.publisher,
+                                    pubDate: post.pubDate,
+                                    description: post.description,
+                                    isbn13: post.isbn13,
+                                    categoryName: post.categoryName,
+                                    priceSales: post.priceSales
+                                }
+                            }}
+                            as={`/books/${post.title}/${post.itemId}`}
+                        >
+                            <h4>{post.title}</h4>
+                        </Link>
+                    </div>
+                )
+            })}
+            <h3>블로거 추천 Top5</h3>
+            {rcmPosts.item.map((post, index) => {
                 return (
                     <div key={post.itemId}>
                         <Link
@@ -72,12 +120,21 @@ export default function Home({posts}) {
     )
 }
 
+async function fetchJson(url) {
+    return (await fetch(url)).json()
+}
+
 export const getServerSideProps = async () => {
-    const res = await fetch(`http://localhost:3000/api/bookList`)
-    const data = await res.json()
+    const [newBook, bestBook, rcmBook] = await Promise.all([
+        fetchJson(`http://localhost:3000/api/newBookList`),
+        fetchJson(`http://localhost:3000/api/bestBookList`),
+        fetchJson(`http://localhost:3000/api/rcmBookList`)
+    ])
     return {
         props: {
-            posts: data
+            newPosts: newBook,
+            bestPosts: bestBook,
+            rcmPosts: rcmBook
         }
     }
 }

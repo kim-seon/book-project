@@ -17,6 +17,6 @@
     "noImplicitAny": false,
     "strictNullChecks": false
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "lib/dbConnect.js", "pages/api/user/users.js"],
   "exclude": ["node_modules"]
 }

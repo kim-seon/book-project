@@ -1,10 +1,9 @@
-
+import Image from 'next/image'
 import { useRouter } from "next/router";
 
-export default function Detail({ params, results }) {
+export default function Detail({ params }) {
     const [ title, id ] = params
     const router = useRouter()
-    console.log(router)
     return (
         <div>
             <p>{title}</p>
@@ -23,7 +22,7 @@ export default function Detail({ params, results }) {
 export function getServerSideProps({ params: { params } }) {
     return {
         props: {
-            params,
+            params
         },
     };
 }
