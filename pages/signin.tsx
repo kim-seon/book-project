@@ -1,13 +1,20 @@
-import Router from 'next/router';
-import { useEffect, useState } from 'react';
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useCurrentUser } from "../lib";
 
-export default function SignUp() {
+export default function SignIn() {
+    const router = useRouter()
+    const [user, { mutate }] = useCurrentUser()
+    
+    useEffect(() => {
+        if(user) router.push('/')
+    }, [user])
+    
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         const data = {
             email: e.target.email.value,
-            nickname: e.target.nickname.value,
             password: e.target.password.value
         }
         const JSONdata = JSON.stringify(data)
@@ -19,20 +26,18 @@ export default function SignUp() {
             },
             body: JSONdata,
         }
-        const response = await fetch('/api/users', options)
+        const response = await fetch('/api/user/auth', options)
         const result = await response.json()
-        if(response.status === 201) {
-            Router.replace("/");
+        if (response.status === 200) {
+            mutate(result)
         }
     }
     return (
         <div>
             <form onSubmit={handleSubmit}>
                 <input id="email" placeholder="이메일" type="email" />
-                <input id="nickname" placeholder="닉네임" />
                 <input id="password" placeholder="비밀번호" type="password"/>
-                <input id="passwordConfirm" placeholder="비밀번호 확인" type="password"/>
-                <button type="submit" onChange={handleSubmit}>회원가입</button>
+                <button type="submit" onChange={handleSubmit}>로그인</button>
             </form>
         </div>
     )

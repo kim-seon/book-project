@@ -1,5 +1,6 @@
-import dbConnect from "../../../lib/dbConnect";
-import User from "../../../models/User"
+import dbConnect from "../../lib/dbConnect";
+import User from "../../models/User"
+
 
 export default async function handler(req, res) {
     const { method } = req
@@ -18,8 +19,14 @@ export default async function handler(req, res) {
             break
         case 'POST':
             try {
-                const user = await User.create(req.body)
-                res.status(201).json({ success: true, data: user })
+                var user = new User(req.body);
+                const { email, nickname, password } = req.body;
+                const exists = await User.findOne({ email });
+                if (exists) {
+                    throw new Error("이미 가입된 메일입니다");
+                }
+                const result = await user.save();
+                return res.status(201).json({ success: true, data: result });
             } catch(error) {
                 res.status(400).json({ success: false })
                 console.log(error)
