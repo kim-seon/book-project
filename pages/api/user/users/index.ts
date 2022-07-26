@@ -1,5 +1,5 @@
-import dbConnect from "../../lib/dbConnect";
-import User from "../../models/User"
+import dbConnect from "../../../../lib/dbConnect";
+import User from "../../../../models/User"
 
 
 export default async function handler(req, res) {
@@ -20,10 +20,14 @@ export default async function handler(req, res) {
         case 'POST':
             try {
                 var user = new User(req.body);
-                const { email, nickname, password } = req.body;
-                const exists = await User.findOne({ email });
-                if (exists) {
-                    throw new Error("이미 가입된 메일입니다");
+                const { email, nickname } = req.body;
+                const emailExists = await User.findOne({ email });
+                const nickExists = await User.findOne({ nickname });
+                if (emailExists) {
+                    return res.status(401).json({ exist: true })
+                }
+                if (nickExists) {
+                    return res.status(402).json({ exists: true })
                 }
                 const result = await user.save();
                 return res.status(201).json({ success: true, data: result });

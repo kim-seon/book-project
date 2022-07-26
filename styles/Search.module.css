@@ -1,0 +1,16 @@
+.main {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.searchInput {
+    width: 65%;
+    padding: 18px;
+    font-size: x-large;
+}
+
+.searchBtn {
+    width: 10%;
+    padding: 20px;
+}

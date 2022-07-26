@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const RecordSchema = new mongoose.Schema({
+const MemoSchema = new mongoose.Schema({
     state: {
         type: String,
         required: true
@@ -13,8 +13,24 @@ const RecordSchema = new mongoose.Schema({
         required: true
     },
     book: {
-        type: Number,
-        required: true
+        type: String,
+        required: true,
+        unique: true
+    },
+    bookCover: {
+        type: String
+    },
+    bookTitle: {
+        type: String
+    },
+    bookAuthor: {
+        type: String
+    },
+    bookDsc: {
+        type: String
+    },
+    bookPage: {
+        type: Number
     },
     content: {
         type: String
@@ -32,6 +48,6 @@ const RecordSchema = new mongoose.Schema({
     page: {
         type: Number
     }
-})
+},{ timestamps: true })
 
-module.exports = mongoose.models.Record || mongoose.model('Record', RecordSchema)
+module.exports = mongoose.models.Memo || mongoose.model('Memo', MemoSchema)

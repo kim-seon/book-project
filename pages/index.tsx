@@ -6,36 +6,12 @@ import Link from 'next/link';
 import SearchContainer from './books/main/searchContainer';
 import { useCurrentUser } from '../lib';
 
-// async function ListMap(posts) {
-//     {posts.item.map((post, index) => {
-//         return (
-//             <div key={post.itemId}>
-//                 <Link
-//                     href={{
-//                         pathname: `/books/${post.title}/${post.itemId}`,
-//                         query: {
-//                             title: post.title,
-//                             cover: post.cover,
-//                             author: post.author,
-//                             publisher: post.publisher,
-//                             pubDate: post.pubDate,
-//                             description: post.description,
-//                             isbn13: post.isbn13,
-//                             categoryName: post.categoryName,
-//                             priceSales: post.priceSales
-//                         }
-//                     }}
-//                     as={`/books/${post.title}/${post.itemId}`}
-//                 >
-//                     <h4>{post.title}</h4>
-//                 </Link>
-//             </div>
-//         )
-//     })}
-// }
+
+
 
 export default function Home({newPosts, bestPosts, rcmPosts}) {
     const [user, { mutate }] = useCurrentUser();
+
     const handleLogout = async () => {
         const data = {
             id: user ? user._id : null
@@ -51,104 +27,121 @@ export default function Home({newPosts, bestPosts, rcmPosts}) {
         });
         mutate(null);
     }
+
     return (
         <div>
-            {user ? user.nickname : <Link href='/signup'>회원가입</Link>}
-            {user ? <a onClick={handleLogout}>로그아웃</a> : <Link href='/signin'>로그인</Link>}
-            {user ? <Link
-                href={{
-                    pathname: `/record/${user._id}`,
-                    query: {
-                        id: user._id,
-                        nickname: user.nickname
-                    }
-                }}
-                as={`/record/${user._id}`}
-            >
-                <a>내 서재</a>
-            </Link> : <></> }
+            <div className={styles.navMenu}>
+                <ul className={styles.menu}>
+                    <li>
+                        {user ? <a>{user.nickname}</a> : <Link href='/signup'>회원가입</Link>}
+                    </li>
+                    <li>
+                        {user ? <a onClick={handleLogout}>로그아웃</a> : <Link href='/signin'>로그인</Link>}
+                    </li>
+                    <li>
+                        {user ? <Link
+                                    href={{
+                                        pathname: `/memo/${user._id}`,
+                                        query: {
+                                            id: user._id,
+                                            nickname: user.nickname
+                                        }
+                                    }}
+                                    as={`/memo/${user._id}`}
+                                >
+                            <a className={styles.myBookshelf}>내 책장</a>
+                        </Link> : <></> }
+                    </li>
+                </ul>
+            </div>
             <SearchContainer />
-            <div>
-                <h3>신간 Top5</h3>
-                {newPosts.item.map((post, index) => {
-                    return (
-                        <div key={post.itemId}>
-                            <Link
-                                href={{
-                                    pathname: `/books/${post.title}/${post.itemId}`,
-                                    query: {
-                                        title: post.title,
-                                        cover: post.cover,
-                                        author: post.author,
-                                        publisher: post.publisher,
-                                        pubDate: post.pubDate,
-                                        description: post.description,
-                                        isbn13: post.isbn13,
-                                        categoryName: post.categoryName,
-                                        priceSales: post.priceSales
-                                    }
-                                }}
-                                as={`/books/${post.title}/${post.itemId}`}
-                            >
-                                <h4>{index+1} {post.title}</h4>
-                            </Link>
-                        </div>
-                    )
-                })}
-                <h3>베스트셀러 Top5</h3>
-                {bestPosts.item.map((post, index) => {
-                    return (
-                        <div key={post.itemId}>
-                            <Link
-                                href={{
-                                    pathname: `/books/${post.title}/${post.itemId}`,
-                                    query: {
-                                        title: post.title,
-                                        cover: post.cover,
-                                        author: post.author,
-                                        publisher: post.publisher,
-                                        pubDate: post.pubDate,
-                                        description: post.description,
-                                        isbn13: post.isbn13,
-                                        categoryName: post.categoryName,
-                                        priceSales: post.priceSales
-                                    }
-                                }}
-                                as={`/books/${post.title}/${post.itemId}`}
-                            >
-                                <h4>{index+1} {post.title}</h4>
-                            </Link>
-                        </div>
-                    )
-                })}
-                <h3>블로거 추천 Top5</h3>
-                {rcmPosts.item.map((post, index) => {
-                    return (
-                        <div key={post.itemId}>
-                            <Link
-                                href={{
-                                    pathname: `/books/${post.title}/${post.itemId}`,
-                                    query: {
-                                        title: post.title,
-                                        cover: post.cover,
-                                        author: post.author,
-                                        publisher: post.publisher,
-                                        pubDate: post.pubDate,
-                                        description: post.description,
-                                        isbn13: post.isbn13,
-                                        categoryName: post.categoryName,
-                                        priceSales: post.priceSales
-                                    }
-                                }}
-                                as={`/books/${post.title}/${post.itemId}`}
-                            >
-                                <h4>{index+1} {post.title}</h4>
-                            </Link>
-                        </div>
-                    )
-                })}
+            <div className={styles.itemList}>
+                <div className={styles.postList}>
+                    <h3>신간 Top5</h3>
+                    {newPosts.item.map((post: any, index: number) => {
+                        return (
+                            <div key={post.isbn13}>
+                                <Link
+                                    href={{
+                                        pathname: `/books/${post.isbn13}`,
+                                        query: {
+                                            title: post.title,
+                                            cover: post.cover,
+                                            author: post.author,
+                                            publisher: post.publisher,
+                                            pubDate: post.pubDate,
+                                            description: post.description,
+                                            categoryName: post.categoryName,
+                                            priceSales: post.priceSales,
+                                            page: post.startIndex
+                                        }
+                                    }}
+                                    as={`/books/${post.isbn13}`}
+                                >
+                                    <p>{index+1} {post.title}</p>
+                                </Link>
+                            </div>
+                        )
+                    })}
+                </div>
+                <div className={styles.postList}>
+                    <h3>베스트셀러 Top5</h3>
+                    {bestPosts.item.map((post: any, index: number) => {
+                        return (
+                            <div key={post.isbn13}>
+                                <Link
+                                    href={{
+                                        pathname: `/books/${post.isbn13}`,
+                                        query: {
+                                            title: post.title,
+                                            cover: post.cover,
+                                            author: post.author,
+                                            publisher: post.publisher,
+                                            pubDate: post.pubDate,
+                                            description: post.description,
+                                            categoryName: post.categoryName,
+                                            priceSales: post.priceSales
+                                        }
+                                    }}
+                                    as={`/books/${post.isbn13}`}
+                                >
+                                    <p>{index+1} {post.title}</p>
+                                </Link>
+                            </div>
+                        )
+                    })}
+                </div>
+                <div className={styles.postList}>
+                    <h3>블로거 추천 Top5</h3>
+                    {rcmPosts.item.map((post: any, index: number) => {
+                        return (
+                            <div key={post.isbn13}>
+                                <Link
+                                    href={{
+                                        pathname: `/books/${post.isbn13}`,
+                                        query: {
+                                            title: post.title,
+                                            cover: post.cover,
+                                            author: post.author,
+                                            publisher: post.publisher,
+                                            pubDate: post.pubDate,
+                                            description: post.description,
+                                            categoryName: post.categoryName,
+                                            priceSales: post.priceSales
+                                        }
+                                    }}
+                                    as={`/books/${post.isbn13}`}
+                                >
+                                    <p>{index+1} {post.title}</p>
+                                </Link>
+                            </div>
+                        )
+                    })}
+                </div>
+                
             </div>
         </div>
+        
     )
 }
 

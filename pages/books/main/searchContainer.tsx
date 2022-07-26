@@ -1,5 +1,6 @@
 import { useRouter } from "next/router"
 import { useState } from "react"
+import styles from '../../../styles/Search.module.css'
 
 export default function SearchContainer() {
     const router = useRouter()
@@ -24,9 +25,9 @@ export default function SearchContainer() {
     }
 
     return (
-        <div>
-            <input onChange={onChange} value={SearchInput} />
-            <button onClick={handleSubmit}>검색</button>
+        <div className={styles.main}>
+            <input className={styles.searchInput} onChange={onChange} value={SearchInput} />
+            <button className={styles.searchBtn} onClick={handleSubmit}>검색</button>
         </div>
     )
 }

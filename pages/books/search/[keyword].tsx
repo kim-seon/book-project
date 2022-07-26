@@ -9,10 +9,10 @@ export default function Search({ data }) {
         <div>
             {data.item.map((post, index) => {
                 return (
-                    <div key={post.itemId}>
+                    <div key={post.isbn13}>
                         <Link
                             href={{
-                                pathname: `/books/${post.title}/${post.itemId}`,
+                                pathname: `/books/${post.isbn13}`,
                                 query: {
                                     title: post.title,
                                     cover: post.cover,
@@ -20,12 +20,11 @@ export default function Search({ data }) {
                                     publisher: post.publisher,
                                     pubDate: post.pubDate,
                                     description: post.description,
-                                    isbn13: post.isbn13,
                                     categoryName: post.categoryName,
                                     priceSales: post.priceSales
                                 }
                             }}
-                            as={`/books/${post.title}/${post.itemId}`}
+                            as={`/books/${post.isbn13}`}
                         >
                             <h4>{post.title}</h4>
                         </Link>
